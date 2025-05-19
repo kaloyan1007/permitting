@@ -1,0 +1,39 @@
+{% extends "permitting/layout.html" %}
+{% load static %}
+
+{% block title %}
+Authorize Permit #{{ permit_id }}
+{% endblock %}
+
+{% block body %}
+<div class="container-sm mb-3">
+    <div class="mb-3">
+        <h1>Authorize Permit</h1>
+        <a class="minor-link" href="{% url 'permitting:permit_display' permit_id=permit_id %}" target="_blank">Permit details</a>
+    </div>
+    <div class="mb-3">
+        <form action="{% url 'permitting:permit_authorize' permit_id=permit_id %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form }}
+                <p class="mx-auto w-50">
+                    <strong>
+                        I confirm the permit is properly initialized, and the procedure for it may proceed with applying the suggested safety measures, including (but not limited to) lockout & tagout activies.
+                    </strong>
+                </p>
+            </div>
+            <button class="btn btn-primary" type="submit">Send for Lockout & Tagout</button>
+        </form>
+    </div>
+    <div class="mb-3 mx-auto">
+        <form action="{% url 'permitting:permit_reject' permit_id=permit_id %}" method="post">
+            {% csrf_token %}
+            <div class="form-group mb-3">
+                <label for="rejection_comment">Rejection comment:</label>
+                <input autocomplete="off" class="form-control mx-auto w-50" id="rejection_comment" name="rejection_comment" maxlength="256" placeholder="Text" required type="text">
+            </div>
+            <button class="btn btn-primary" type="submit">Reject</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

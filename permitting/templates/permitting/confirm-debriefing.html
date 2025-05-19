@@ -1,0 +1,31 @@
+{% extends "permitting/layout.html" %}
+{% load static %}
+
+{% block title %}
+Confirm Debriefing for Permit #{{ permit_id }}
+{% endblock %}
+
+{% block body %}
+<div class="container-sm mb-3">
+    <div class="mb-3">
+        <h1>Confirm Debriefing for Permit</h1>
+        <a class="minor-link" href="{% url 'permitting:permit_display' permit_id=permit_id %}" target="_blank">Permit details</a>
+    </div>
+    <div class="mb-3">
+        <form action="{% url 'permitting:permit_confirm_debriefing' permit_id=permit_id %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <div class="mb-3 mx-auto w-50">
+                    <p>
+                        <strong>
+                            I confirm that I have been debriefed on the area & equipment related risks and instructed on the task-specific hazards for task "{{ task_description }}".
+                        </strong>
+                    </p>
+                </div>
+                {{ form }}
+            </div>
+            <button class="btn btn-primary" type="submit">Confirm</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

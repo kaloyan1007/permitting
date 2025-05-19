@@ -1,0 +1,41 @@
+{% extends "permitting/layout.html" %}
+{% load static %}
+
+{% block title %}
+Remove LOTO for Permit #{{ permit_id }}
+{% endblock %}
+
+{% block body %}
+<div class="container-sm mb-3">
+    <div class="mb-3">
+        <h1>Remove LOTO for Permit</h1>
+        <a class="minor-link" href="{% url 'permitting:permit_display' permit_id=permit_id %}" target="_blank">Permit details</a>
+    </div>
+    <div class="mb-3">
+        <form action="{% url 'permitting:permit_remove_loto' permit_id=permit_id %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <div class="mb-3 mx-auto w-50">
+                    <p>
+                        <strong>
+                            {% if "loto_officer" in appointments %}
+                            I confirm that I have removed the Lockout & Tagout (LOTO) procedures, specified in the permit.
+                            {% endif %}
+                            {% if "safety_gatekeeper" in appointments %}
+                            I confirm that the Lockout & Tagout (LOTO) procedures, specified in the permit, have been removed.
+                            {% endif %}
+                        </strong>
+                    </p>
+                    <ul>
+                        {% for item in loto_activities %}
+                        <li>{{ item.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {{ form }}
+            </div>
+            <button class="btn btn-primary" type="submit">Confirm LOTO removed</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

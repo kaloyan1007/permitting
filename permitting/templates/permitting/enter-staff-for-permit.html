@@ -1,0 +1,25 @@
+{% extends "permitting/layout.html" %}
+{% load static %}
+
+{% block title %}
+Staffing Permit #{{ permit_id }}
+{% endblock %}
+
+{% block body %}
+<div class="container-sm mb-3">
+    <div class="mb-3">
+        <h1>Select staff</h1>
+        <a class="minor-link" href="{% url 'permitting:permit_display' permit_id=permit_id %}" target="_blank">Permit details</a>
+    </div>
+    <div class="mb-3">
+        <form action="{% url 'permitting:permit_enter_staff' permit_id=permit_id %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form }}
+            </div>
+            <button class="btn btn-primary" type="submit">Send for Authorization</button>
+        </form>
+
+    </div>
+</div>
+{% endblock %}

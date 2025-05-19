@@ -1,0 +1,70 @@
+{% extends "permitting/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+<h3 class="mb-3">Hello, {{user.username}}!</h3>
+
+{% for role in user.eligible_for_roles.all %}
+{% if role.name == "issuer" %}
+<div class="mb-3">
+    <a class="link-btn" href="{% url 'permitting:permit_issue_new' %}">Issue New Permit</a>
+</div>
+{% endif %}
+{% endfor %}
+
+{% if action_notifications_preview %}
+<div class="mb-3">
+    <h5 class="mb-3">Actions</h5>
+    <div class="border mb-3 mx-auto p-3 rounded w-50">
+        <div class="mb-3 muted-elements">{{ action_notifications_preview.created_on }}</div>
+        <div class="mb-3">{{ action_notifications_preview.message }}</div>
+        <div>
+            <a class="link-btn" href="{% url 'permitting:redirect_to_action_view' %}?target_viewname={{ action_notifications_preview.target_viewname }}&permit_id={{ action_notifications_preview.permit.id }}">Details</a>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% if info_notifications_preview %}
+<div class="mb-3">
+    <h5 class="mb-3">Info</h5>
+    <div class="border mb-3 mx-auto info-notif-container p-3 rounded w-50" id="{{ info_notifications_preview.id }}">
+        <button type="button" class="btn-close deactivate-notif-btn float-end" aria-label="Close"></button>
+        <div class="mb-3 muted-elements">{{ info_notifications_preview.created_on }}</div>
+        <div>{{ info_notifications_preview.message }}</div>
+    </div>
+</div>
+{% endif %}
+
+{% if notifications_count > 2 %}
+<div class="mb-3">
+    <a class="minor-link" href="{% url 'permitting:notifications' %}">See All</a>
+</div>
+{% endif %}
+
+{% if permits_ids %}
+<div class="mb-3 mx-auto w-50">
+    <h5 class="mb-3">Recent Permits</h5>
+    <ul>
+        {% for id in permits_ids %}
+        <li>
+            <a class="minor-link" href="{% url 'permitting:permit_display' permit_id=id%}">Permit #{{ id }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+{% if permits_count > 3 %}
+<div class="mb-3">
+    <a class="minor-link" href="{% url 'permitting:my_permits' %}">See All</a>
+</div>
+{% endif %}
+
+{% block script %}
+<script src="{% static 'permitting/index.js' %}" type="module"></script>
+{% endblock %}
+
+{% endblock %}
+

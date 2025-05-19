@@ -1,0 +1,58 @@
+{% extends "permitting/layout.html" %}
+{% load static %}
+
+{% block title %}
+Review Application to Finalize Permit #{{ permit_id }}
+{% endblock %}
+
+{% block body %}
+<div class="container-sm mb-3">
+    <div class="mb-3">
+        <h1>Review Application to Finalize Permit #{{ permit_id }}</h1>
+        <a class="minor-link" href="{% url 'permitting:permit_display' permit_id=permit_id %}" target="_blank">Permit details</a>
+    </div>
+    <div class="mb-3">
+        <form action="{% url 'permitting:permit_review_finalization_application' permit_id=permit_id %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <div class="mb-3 mx-auto w-50">
+                    I verify that:
+                    <ul>
+                        <li>
+                            The equipment that was worked on can safely be put into operation or reserve, or is secured while waiting for further works.
+                        </li>
+                        <li>
+                            The work area has been cleaned up.
+                        </li>
+                        <li>
+                            The workers have been led out of the work area.
+                        </li>
+                    </ul>
+                </div>
+                {{ form }}
+            </div>
+            <button class="btn btn-primary" type="submit">Confirm & Remove LOTO</button>
+        </form>
+    </div>
+    <div class="mb-3 mx-auto">
+        <form action="{% url 'permitting:permit_finalize' permit_id=permit_id %}" method="post">
+            {% csrf_token %}
+                <div class="mb-3">
+                <label for="keep_loto_justification_comment">Keep LOTO justifiction comment:</label>
+                <input autocomplete="off" class="form-control mx-auto w-50" id="keep_loto_justification_comment" name="keep_loto_justification_comment" maxlength="256" placeholder="Text" required type="text">
+            </div>
+            <button class="btn btn-primary" type="submit">Confirm & Finalize Permit</button>
+        </form>
+    </div>
+    <div class="mb-3 mx-auto">
+        <form action="{% url 'permitting:permit_refuse_finalization' permit_id=permit_id %}" method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="refuse_finalization_comment">Refusal to finalize comment:</label>
+                <input autocomplete="off" class="form-control mx-auto w-50" id="refuse_finalization_comment" name="refuse_finalization_comment" maxlength="256" placeholder="Text" required type="text">
+            </div>
+            <button class="btn btn-primary" type="submit">Refuse to finalize now</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

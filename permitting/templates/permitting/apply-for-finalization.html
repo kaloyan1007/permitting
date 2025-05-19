@@ -1,0 +1,40 @@
+{% extends "permitting/layout.html" %}
+{% load static %}
+
+{% block title %}
+Apply for Finalization of Permit #{{ permit_id }}
+{% endblock %}
+
+{% block body %}
+<div class="container-sm mb-3">
+    <div class="mb-3">
+        <h1>Apply for Finalization of Permit #{{ permit_id }}</h1>
+        <a class="minor-link" href="{% url 'permitting:permit_display' permit_id=permit_id %}" target="_blank">Permit details</a>
+    </div>
+    <div class="mb-3">
+        <form action="{% url 'permitting:permit_apply_for_finalization' permit_id=permit_id %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <div class="mb-3 mx-auto w-50">
+                    I confirm that :
+                    <strong>
+                        <ul>
+                            <li>
+                                The equipment that was worked on can safely be put into operation or reserve, or is secured while waiting for further works.
+                            </li>
+                            <li>
+                                The work area has been cleaned up.
+                            </li>
+                            <li>
+                                The workers have been led out of the work area.
+                            </li>
+                        </ul>
+                    </strong>
+                </div>
+                {{ form }}
+            </div>
+            <button class="btn btn-primary" type="submit">Confirm</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

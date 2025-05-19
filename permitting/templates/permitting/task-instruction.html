@@ -1,0 +1,36 @@
+{% extends "permitting/layout.html" %}
+{% load static %}
+
+{% block title %}
+Task Instructions for Permit #{{ permit_id }}
+{% endblock %}
+
+{% block body %}
+<div class="container-sm mb-3">
+    <div class="mb-3">
+        <h1>Task Instructions for Permit</h1>
+        <a class="minor-link" href="{% url 'permitting:permit_display' permit_id=permit_id %}" target="_blank">Permit details</a>
+    </div>
+    <div class="mb-3">
+        <form action="{% url 'permitting:permit_task_instruction' permit_id=permit_id %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <div class="mb-3 mx-auto w-50">
+                    <p>
+                        <strong>
+                            I confirm that I have personally instructed the following workers regarding the task-specific hazards for task "{{ task_description }}":
+                        </strong>
+                    </p>
+                    <ul>
+                        {% for item in worker_team %}
+                        <li>{{ item.worker.username }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {{ form }}
+            </div>
+            <button class="btn btn-primary" type="submit">Confirm</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

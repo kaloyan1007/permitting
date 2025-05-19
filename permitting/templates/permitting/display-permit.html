@@ -1,0 +1,232 @@
+{% extends "permitting/layout.html" %}
+{% load static %}
+{% load custom_filters %}
+
+
+{% block title %}
+Permit #{{ permit_total_content.id }}
+{% endblock %}
+
+{% block body %}
+<div class="container-sm mb-3">
+    <div class="mb-3">
+        <h1>Permit #{{ permit_total_content.id }}</h1>
+    </div>
+
+    {% if action_notifications %}
+    <div class="mb-3">
+        <h5 class="mb-3">Actions</h5>
+        {% for item in action_notifications %}
+        <div class="border mb-3 mx-auto p-3 rounded w-50">
+            <div class="mb-3 muted-elements">{{ item.created_on }}</div>
+            <div class="mb-3">{{ item.message }}</div>
+            <div>
+                <a class="link-btn" href="{% url 'permitting:redirect_to_action_view' %}?target_viewname={{ item.target_viewname }}&permit_id={{ item.permit.id }}">Details</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="accordion accordion-flush" id="accordionFlush">
+        <div class="accordion-item mb-3">
+            <h4 class="accordion-header mb-3">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                    Basic data
+                </button>
+            </h4>
+            <div id="flush-collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionFlush">
+                <div class="accordion-body">
+                    <table class="table table-responsive table-hover ">
+                        <tbody>
+                            <tr>
+                                <th class="table-primary">Created on</th>
+                                <td>{{ permit_total_content.created_on }}</td>
+                            </tr>
+                            <tr>
+                                <th class="table-primary">Status</th>
+                                <td>
+                                    {{ permit_total_content.status }}
+                                    {% if permit_total_content.status_desc %}
+                                    ({{ permit_total_content.status_desc }})
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="table-primary">Task description</th>
+                                <td>{{ permit_total_content.task_description }}</td>
+                            </tr>
+                            <tr>
+                                <th class="table-primary">Targeted equipment</th>
+                                <td>
+                                    {% for item in permit_total_content.targeted_equipment %}
+                                    {{ item }}
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item mb-3">
+            <h4 class="accordion-header mb-3">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                    Safety
+                </button>
+            </h4>
+            <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlush">
+                <div class="accordion-body">
+                    <table class="table table-responsive table-hover ">
+                        <tbody>
+                            <tr>
+                                <th class="table-primary">Risks</th>
+                                <td>
+                                    {% for item in permit_total_content.risks %}
+                                    <span class="badge bg-danger text-white">{{ item }}</span>
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="table-primary">Personal protection</th>
+                                <td>
+                                    {% for item in permit_total_content.personal_protection %}
+                                    <span class="badge bg-info">{{ item }}</span>
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="table-primary">Collective protection</th>
+                                <td>
+                                    {% for item in permit_total_content.collective_protection %}
+                                    <span class="badge bg-info">{{ item }}</span>
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="table-primary">Safety measures</th>
+                                <td>
+                                    {% for item in permit_total_content.safety_measures %}
+                                    <span class="badge bg-warning">{{ item }}</span>
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item mb-3">
+            <h4 class="accordion-header mb-3">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+                    Team
+                </button>
+            </h4>
+            <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFlush">
+                <div class="accordion-body">
+
+                    <div class="mb-3">
+                        <table class="table table-responsive table-hover ">
+                            <tbody>
+                                <h6 class="mb-3">Appointments</h6>
+                                {% for key, value in permit_total_content.appointments.items %}
+                                <tr>
+                                    <th class="table-primary">{{ key|model_field_names_to_proper }}</th>
+                                    <td>
+                                        {{ value }}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mb-3">
+                        {% if permit_total_content.workers|length > 0 %}
+                        <table class="table table-responsive table-hover ">
+                            <tbody>
+                                <h6 class="mb-3">Workers</h6>
+
+                                <tr>
+                                {% for key in permit_total_content.workers.0.keys %}
+                                    <th class="table-primary">{{ key|model_field_names_to_proper }}</th>
+                                {% endfor %}
+                                </tr>
+
+                                {% for w in permit_total_content.workers %}
+                                <tr>
+                                {% for value in w.values %}
+                                    <td>
+                                        {{ value }}
+                                    </td>
+                                {% endfor %}
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if permit_total_content.daily_open_close|length > 0 %}
+        <div class="accordion-item mb-3">
+            <h4 class="accordion-header mb-3">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
+                    Daily open & close logs
+                </button>
+            </h4>
+            <div id="flush-collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordionFlush">
+                <div class="accordion-body">
+                    <table class="table table-responsive table-hover ">
+                        <thead>
+                            <tr>
+                            {% for key in permit_total_content.daily_open_close|first %}
+                                <th class="table-primary">{{ key|model_field_names_to_proper }}</th>
+                            {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for log in permit_total_content.daily_open_close %}
+                            <tr>
+                            {% for key, value in log.items %}
+                                <td>
+                                    {{ value }}
+                                </td>
+                            {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <div class="accordion-item mb-3">
+            <h4 class="accordion-header mb-3">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFive" aria-expanded="false" aria-controls="flush-collapseFive">
+                    Confirmations
+                </button>
+            </h4>
+            <div id="flush-collapseFive" class="accordion-collapse collapse" data-bs-parent="#accordionFlush">
+                <div class="accordion-body">
+                    <table class="table table-responsive table-hover ">
+                        <tbody>
+                            {% for key, value in permit_total_content.confirmations.items %}
+                            {% if value is not None %}
+                            <tr>
+                                <th class="table-primary">{{ key|model_field_names_to_proper }}</th>
+                                <td>
+                                    {{ value }}
+                                </td>
+                            </tr>
+                            {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

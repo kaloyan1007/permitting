@@ -1,0 +1,36 @@
+{% extends "permitting/layout.html" %}
+{% load static %}
+
+{% block title %}
+LOTO for Permit #{{ permit_id }}
+{% endblock %}
+
+{% block body %}
+<div class="container-sm mb-3">
+    <div class="mb-3">
+        <h1>Confirm LOTO for Permit</h1>
+        <a class="minor-link" href="{% url 'permitting:permit_display' permit_id=permit_id %}" target="_blank">Permit details</a>
+    </div>
+    <div class="mb-3">
+        <form action="{% url 'permitting:permit_add_loto' permit_id=permit_id %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <div class="mb-3 mx-auto w-50">
+                    <p>
+                        <strong>
+                            I confirm that I have carried out the Lockout & Tagout (LOTO) procedures, as specified in the permit.
+                        </strong>
+                    </p>
+                    <ul>
+                        {% for item in loto_activities %}
+                        <li>{{ item.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {{ form }}
+            </div>
+            <button class="btn btn-primary" type="submit">Confirm LOTO in place</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

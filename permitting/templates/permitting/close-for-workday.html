@@ -1,0 +1,36 @@
+{% extends "permitting/layout.html" %}
+{% load static %}
+
+{% block title %}
+Daily Closing for Permit #{{ permit_id }}
+{% endblock %}
+
+{% block body %}
+<div class="container-sm mb-3">
+    <div class="mb-3">
+        <h1>Daily Closing for Permit</h1>
+        <a class="minor-link" href="{% url 'permitting:permit_display' permit_id=permit_id %}" target="_blank">Permit details</a>
+    </div>
+    <div class="mb-3">
+        <form action="{% url 'permitting:permit_close_for_day' permit_id=permit_id %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <div class="mb-3">
+                    <p>
+                        <strong>
+                            {% if "foreman" in appointments %}
+                            I confirm that I have lead the workers out of the work area for task "{{ task_description }}" per permit #{{ permit_id }}.
+                            {% endif %}
+                            {% if "safety_gatekeeper" in appointments %}
+                            I confirm that the workers have been led out of the work area for task "{{ task_description }}" per permit #{{ permit_id }}.
+                            {% endif %}
+                        </strong>
+                    </p>
+                </div>
+                {{ form }}
+            </div>
+            <button class="btn btn-primary" type="submit">Confirm</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

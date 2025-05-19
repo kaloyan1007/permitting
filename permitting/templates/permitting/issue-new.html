@@ -1,0 +1,27 @@
+{% extends "permitting/layout.html" %}
+{% load static %}
+
+{% block title %}
+    New Permit
+{% endblock %}
+
+{% block body %}
+<div class="container-sm mb-3">
+    <div class="mb-3">
+        <h1>Issue New Permit</h1>
+    </div>
+    <div class="mb-3">
+        <form action="{% url 'permitting:permit_issue_new' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form }}
+            </div>
+            <button class="btn btn-primary" type="submit">Send for Staffing</button>
+        </form>
+    </div>
+</div>
+{% block script %}
+<script src="{% static 'permitting/issue-new.js' %}"></script>
+{% endblock %}
+
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "permitting/layout.html" %}
+{% load static %}
+
+{% block title %}
+Safety Gatekeeping for Permit #{{ permit_id }}
+{% endblock %}
+
+{% block body %}
+<div class="container-sm mb-3">
+    <div class="mb-3">
+        <h1>Safety Gatekeeping for Permit</h1>
+        <a class="minor-link" href="{% url 'permitting:permit_display' permit_id=permit_id %}" target="_blank">Permit details</a>
+    </div>
+    <div class="mb-3">
+        <form action="{% url 'permitting:permit_safety_gk' permit_id=permit_id %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <div class="mb-3 mx-auto w-50">
+                    <p>
+                        <strong>
+                            I confirm that I have personally checked the Lockout & Tagout (LOTO) procedures are applied, as specified in the permit.
+                        </strong>
+                    </p>
+                    <ul>
+                        {% for item in loto_activities %}
+                        <li>{{ item.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="mb-3 mx-auto w-50">
+                    <p>
+                        <strong>
+                            I confirm that I have personally checked the Collective Protection measures are applied, as specified in the permit.
+                        </strong>
+                    </p>
+                    <ul>
+                        {% for item in collective_protections %}
+                        <li>{{ item.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="mb-3 mx-auto w-50">
+                    <p>
+                        <strong>
+                            I confirm that I have personally debriefed the following workers on the area & equipment hazards, and demonstrated LOTO in action:
+                        </strong>
+                    </p>
+                    <ul>
+                        {% for item in worker_team %}
+                        <li>{{ item.worker.username }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {{ form }}
+            </div>
+            <button class="btn btn-primary" type="submit">Confirm</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
